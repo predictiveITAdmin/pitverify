@@ -13,6 +13,7 @@
   "type": "module",
   "dependencies": {
     "@azure/identity": "^4.9.1",
+    "@azure/msal-node": "^3.5.1",
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",

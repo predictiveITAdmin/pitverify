@@ -1,35 +1,100 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import express from 'express';
+import { msalInstance } from '../auth/msalClient.js';
+import crypto from 'crypto';
 
-import passport from 'passport';
-import { OIDCStrategy } from 'passport-azure-ad';
+const router = express.Router();
+const REDIRECT_URI = 'http://localhost:3001/auth/redirect';
 
-const config = {
-  identityMetadata: `https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/v2.0/.well-known/openid-configuration`,
-  clientID: process.env.AZURE_CLIENT_ID,
-  clientSecret: process.env.AZURE_CLIENT_SECRET,
-  responseType: 'code',
-  responseMode: 'query',
-  redirectUrl: 'http://localhost:3001/auth/openid/return',
-  allowHttpForRedirectUrl: true,
-  validateIssuer: false,
-  passReqToCallback: false,
-  scope: ['profile', 'offline_access', 'User.Read']
-};
+// Utility: base64URL and SHA256 (PKCE)
+function base64URLEncode(buffer) {
+  return buffer.toString('base64')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '');
+}
+function sha256(buffer) {
+  return crypto.createHash('sha256').update(buffer).digest();
+}
 
-passport.use(new OIDCStrategy(config, (iss, sub, profile, accessToken, refreshToken, done) => {
-  if (!profile.oid) {
-    return done(new Error("No OID found in user profile."), null);
+// Step 1: Initiate Azure login
+router.get('/login', (req, res, next) => {
+  const codeVerifier = base64URLEncode(crypto.randomBytes(32));
+  const codeChallenge = base64URLEncode(sha256(Buffer.from(codeVerifier)));
+
+  req.session.codeVerifier = codeVerifier;
+
+  req.session.save(async (err) => {
+    if (err) {
+      console.error("Failed to save session before redirect:", err);
+      return next(err);
+    }
+
+    try {
+      const authCodeUrlParameters = {
+        scopes: ["openid", "profile", "User.Read"],
+        redirectUri: REDIRECT_URI,
+        codeChallenge,
+        codeChallengeMethod: 'S256'
+      };
+
+      const authUrl = await msalInstance.getAuthCodeUrl(authCodeUrlParameters);
+      res.redirect(authUrl);
+    } catch (error) {
+      console.error("Failed to generate auth URL:", error);
+      res.status(500).send("Failed to initiate authentication");
+    }
+  });
+});
+// Step 2: Handle redirect from Azure
+router.get('/redirect', async (req, res) => {
+  console.log('Received code:', req.query.code);
+  console.log('Session codeVerifier exists:', !!req.session.codeVerifier); 
+  const code = req.query.code;
+  const codeVerifier = req.session.codeVerifier;
+  console.log(`Session Details: ${req.session}`);
+
+  if (!codeVerifier) {
+    return res.status(400).send('Missing code verifier in session');
   }
-  return done(null, profile);
-}));
 
-passport.serializeUser((user, done) => {
-  done(null, user);
+  const tokenRequest = {
+    code,
+    scopes: ["User.Read"],
+    redirectUri: REDIRECT_URI,
+    codeVerifier
+  };
+
+  try {
+    const tokenResponse = await msalInstance.acquireTokenByCode(tokenRequest);
+    req.session.user = tokenResponse.account;
+
+    // Save session before redirecting
+    req.session.save(() => {
+      res.redirect('http://localhost:5173');
+    });
+  } catch (error) {
+    console.error('Token acquisition failed:', error);
+    res.status(500).send('Authentication error', error);
+  }
 });
 
-passport.deserializeUser((user, done) => {
-  done(null, user);
+// Step 3: Check current session
+router.get('/me', (req, res) => {
+  if (req.session.user) {
+    res.json({ name: req.session.user.name });
+  } else {
+    res.status(401).json({ error: 'Not authenticated' });
+  }
 });
 
-export default passport;
+// Step 4: Logout
+router.get('/logout', (req, res) => {
+  req.session.destroy(() => {
+    res.redirect(
+      'https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=http://localhost:5173'
+      
+    );  
+  });
+});
+
+export default router;

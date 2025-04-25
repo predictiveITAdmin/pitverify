@@ -1,9 +1,13 @@
-import React from 'react'
-import { useLocation, Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
+import useAuthStore from '../store/authStore';
 
-const SecureRoute = ({isAuthenticated, children}) => {
+const SecureRoute = ({ children }) => {
   const location = useLocation();
-  return isAuthenticated ? children : <Navigate to="/" state={{ from: location }} replace />;
-}
+  const { isAuthenticated } = useAuthStore();
 
-export default SecureRoute
+  return isAuthenticated
+    ? children
+    : <Navigate to="/login" state={{ from: location }} replace />;
+};
+
+export default SecureRoute;
