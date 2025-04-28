@@ -45,6 +45,11 @@ app.get('/health', (req, res) => {
 
 
 // Start server
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+if (!process.env.AZURE_FUNCTIONS_ENVIRONMENT) {
+  app.listen(port, () => {
+    console.log(`Server running locally at http://localhost:${port}`);
+  });
+}
+
+
+export default app;
