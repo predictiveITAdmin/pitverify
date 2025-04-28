@@ -20,7 +20,7 @@ const EmployeeDirectory = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const res = await axios.get('http://localhost:3001/employees', {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/employees`, {
           withCredentials: true
         });
         setEmployees(res.data);

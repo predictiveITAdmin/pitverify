@@ -12,7 +12,7 @@ const PublicEmployeeView = () => {
   useEffect(() => {
     const fetchEmployee = async () => {
       try {
-        const res = await axios.get(`http://localhost:3001/employees/public/${id}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/employees/public/${id}`);
         setEmployee(res.data);
       } catch (err) {
         console.error('Error fetching employee:', err);
@@ -27,7 +27,7 @@ const PublicEmployeeView = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-100 to-slate-200">
+      <div className="flex items-center justify-center min-h-full bg-gradient-to-br">
         <div className="text-gray-600 text-lg animate-pulse">Loading Employee Details...</div>
       </div>
     );
@@ -35,14 +35,14 @@ const PublicEmployeeView = () => {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-100 to-slate-200">
+      <div className="flex items-center justify-center min-h-full mt-10 bg-gradient-to-br">
         <div className="text-red-500 text-lg">{error}</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br">
+    <div className="min-h-full flex flex-col items-center justify-center bg-gradient-to-br">
       <div className="max-w-4xl bg-white p-8 rounded-2xl shadow-2xl space-y-8">
         {/* Header */}
         <div className="text-right">

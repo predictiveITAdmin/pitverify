@@ -14,7 +14,7 @@ const Header = () => {
   const handleLogout = async () => {
     setDropdownOpen(false);
     try {
-      await axios.get('http://localhost:3001/auth/logout', { withCredentials: true });
+      await axios.get(`${import.meta.env.VITE_API_URL}/auth/logout`, { withCredentials: true });
     } catch (err) {
       console.error('Logout failed:', err);
     }

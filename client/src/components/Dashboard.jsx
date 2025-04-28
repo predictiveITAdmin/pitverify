@@ -25,9 +25,9 @@ const Dashboard = () => {
     const fetchDashboardData = async () => {
       try {
         const [summaryRes, deptRes, hiresRes] = await Promise.all([
-          axios.get('http://localhost:3001/stats/summary', { withCredentials: true }),
-          axios.get('http://localhost:3001/stats/departments', { withCredentials: true }),
-          axios.get('http://localhost:3001/stats/new-hires', { withCredentials: true }),
+          axios.get(`${import.meta.env.VITE_API_URL}/stats/summary`, { withCredentials: true }),
+          axios.get(`${import.meta.env.VITE_API_URL}/stats/departments`, { withCredentials: true }),
+          axios.get(`${import.meta.env.VITE_API_URL}/stats/new-hires`, { withCredentials: true }),
         ]);
 
         setStats(summaryRes.data);

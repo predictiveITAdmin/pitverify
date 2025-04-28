@@ -9,7 +9,7 @@ function App() {
   const { setAuthenticated, setUser } = useAuthStore();
 
   useEffect(() => {
-    axios.get('http://localhost:3001/auth/me', { withCredentials: true })
+    axios.get(`${import.meta.env.VITE_API_URL}/auth/me`, { withCredentials: true })
       .then(res => {
         if (res.data?.name) {
           setAuthenticated(true);

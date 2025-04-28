@@ -1,5 +1,31 @@
 @import "tailwindcss";
 
+@keyframes slidein {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  20% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+
+  80% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.animate-slidein {
+  animation: slidein 3s forwards;
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
