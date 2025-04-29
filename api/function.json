@@ -1,6 +1,7 @@
 
 {
-  "scriptFile": "./index.js",
+  "scriptFile": "index.js",
+  "entryPoint": "handler",
   "bindings": [
     {
       "authLevel": "anonymous",
