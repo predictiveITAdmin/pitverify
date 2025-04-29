@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
-    "dev": "nodemon \"./server/server.js",
-    "start": "node \"./server/server.js",
+    "dev": "nodemon \"./api/server.js",
+    "start": "node \"./api/server.js",
     "build": "echo \"No Build Required for API\" && exit 0"
   },
   "author": "Bhavesh",
