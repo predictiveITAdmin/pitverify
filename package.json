@@ -3,15 +3,15 @@
   "version": "1.0.0",
   "description": "Application can create a QR Code and fetch employee details",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
-    "dev": "nodemon \"./api/server.js",
-    "start": "node \"./api/server.js",
+    "dev": "nodemon \"./api/server.js\"",
+    "start": "func start",
     "build": "echo \"No Build Required for API\" && exit 0"
   },
   "author": "Bhavesh",
   "license": "ISC",
-  "type": "module",
   "dependencies": {
     "@azure/identity": "^4.9.1",
     "@azure/msal-node": "^3.5.1",
@@ -25,5 +25,8 @@
     "passport": "^0.7.0",
     "passport-azure-ad": "^4.3.5",
     "react": "^19.1.0"
+  },
+  "engines": {
+    "node": "16.x"
   }
 }
