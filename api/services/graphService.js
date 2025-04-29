@@ -1,7 +1,6 @@
+const { getGraphClient } = require('./masl');
 
-import { getGraphClient } from './masl.js';
-
-export async function getAllEmployeesBasic() {
+async function getAllEmployeesBasic() {
   const client = getGraphClient();
   const response = await client.api('/users')
     .select('displayName,employeeId,id, accountEnabled, department')
@@ -10,7 +9,7 @@ export async function getAllEmployeesBasic() {
   return response.value;
 }
 
-export async function getEmployeeData(id) {
+async function getEmployeeData(id) {
   const client = getGraphClient();
   const response = await client.api('/users')
     .filter(`id eq '${id}'`)
@@ -21,3 +20,8 @@ export async function getEmployeeData(id) {
   }
   return response.value[0];
 }
+
+module.exports = {
+  getAllEmployeesBasic,
+  getEmployeeData
+};

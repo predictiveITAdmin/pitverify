@@ -1,6 +1,6 @@
-import express from 'express';
-import { msalInstance } from '../auth/msalClient.js';
-import crypto from 'crypto';
+const express = require('express');
+const { msalInstance } = require('../auth/msalClient');
+const crypto = require('crypto');
 
 const router = express.Router();
 const REDIRECT_URI = 'http://localhost:3001/auth/redirect';
@@ -69,4 +69,4 @@ router.get('/logout', (req, res) => {
   });
 });
 
-export default router;
+module.exports = router;

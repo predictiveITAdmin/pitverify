@@ -1,5 +1,5 @@
-import { ConfidentialClientApplication, LogLevel } from '@azure/msal-node';
-import dotenv from 'dotenv';
+const { ConfidentialClientApplication, LogLevel } = require('@azure/msal-node');
+const dotenv = require('dotenv');
 
 dotenv.config();
 
@@ -20,4 +20,6 @@ const msalConfig = {
   }
 };
 
-export const msalInstance = new ConfidentialClientApplication(msalConfig);
+const msalInstance = new ConfidentialClientApplication(msalConfig);
+
+module.exports = { msalInstance };

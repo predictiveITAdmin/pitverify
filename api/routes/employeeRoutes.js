@@ -1,7 +1,6 @@
-// server/routes/employeeRoutes.js
-import express from 'express';
-import isAuthenticated from '../utils/isAuthenticated.js';
-import { getAllEmployeesBasic, getEmployeeData } from '../services/graphService.js';
+const express = require('express');
+const isAuthenticated = require('../utils/isAuthenticated');
+const { getAllEmployeesBasic, getEmployeeData } = require('../services/graphService');
 
 const router = express.Router();
 
@@ -30,5 +29,4 @@ router.get('/public/:id', async (req, res) => {
   }
 });
 
-
-export default router;
+module.exports = router;

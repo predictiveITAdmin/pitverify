@@ -1,6 +1,6 @@
-import express from 'express';
-import { msalInstance } from '../auth/msalClient.js';
-import crypto from 'crypto';
+const express = require('express');
+const { msalInstance } = require('../auth/msalClient');
+const crypto = require('crypto');
 
 const router = express.Router();
 const REDIRECT_URI = 'http://localhost:3001/auth/redirect';
@@ -45,10 +45,11 @@ router.get('/login', (req, res, next) => {
     }
   });
 });
+
 // Step 2: Handle redirect from Azure
 router.get('/redirect', async (req, res) => {
   console.log('Received code:', req.query.code);
-  console.log('Session codeVerifier exists:', !!req.session.codeVerifier); 
+  console.log('Session codeVerifier exists:', !!req.session.codeVerifier);
   const code = req.query.code;
   const codeVerifier = req.session.codeVerifier;
   console.log(`Session Details: ${req.session}`);
@@ -68,13 +69,12 @@ router.get('/redirect', async (req, res) => {
     const tokenResponse = await msalInstance.acquireTokenByCode(tokenRequest);
     req.session.user = tokenResponse.account;
 
-    // Save session before redirecting
     req.session.save(() => {
       res.redirect('http://localhost:5173');
     });
   } catch (error) {
     console.error('Token acquisition failed:', error);
-    res.status(500).send('Authentication error', error);
+    res.status(500).send('Authentication error');
   }
 });
 
@@ -90,11 +90,8 @@ router.get('/me', (req, res) => {
 // Step 4: Logout
 router.get('/logout', (req, res) => {
   req.session.destroy(() => {
-    res.redirect(
-      'https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=http://localhost:5173'
-      
-    );  
+    res.redirect('https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=http://localhost:5173');
   });
 });
 
-export default router;
+module.exports = router;

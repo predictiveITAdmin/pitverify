@@ -1,6 +1,4 @@
-import createHandler from 'azure-function-express';
-import app from './server.js';
+const createHandler = require('azure-function-express').createHandler;
+const app = require('./server');
 
-
-
-export const handler =  createHandler(app);
+module.exports = createHandler(app);

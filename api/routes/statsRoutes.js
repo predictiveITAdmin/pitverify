@@ -1,6 +1,6 @@
-import express from 'express';
-import { getGraphClient } from '../services/masl.js';
-import isAuthenticated from '../utils/isAuthenticated.js';
+const express = require('express');
+const { getGraphClient } = require('../services/masl');
+const isAuthenticated = require('../utils/isAuthenticated');
 
 const router = express.Router();
 
@@ -8,7 +8,7 @@ router.get('/summary', isAuthenticated, async (req, res) => {
   try {
     const client = getGraphClient();
     const users = await client.api('/users').top(999).select('accountEnabled', 'id', 'givenName').get();
-    console.log(users)
+    console.log(users);
     const total = users.value.length;
     const active = users.value.filter(user => user.accountEnabled).length;
     const inactive = total - active;
@@ -57,4 +57,4 @@ router.get('/new-hires', isAuthenticated, async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;

@@ -1,7 +1,7 @@
-import { Client } from '@microsoft/microsoft-graph-client';
-import { ClientSecretCredential } from '@azure/identity';
-import 'isomorphic-fetch';
-import dotenv from 'dotenv';
+const { Client } = require('@microsoft/microsoft-graph-client');
+const { ClientSecretCredential } = require('@azure/identity');
+require('isomorphic-fetch');
+const dotenv = require('dotenv');
 dotenv.config();
 
 const tenantId = process.env.AZURE_TENANT_ID;
@@ -10,7 +10,7 @@ const clientSecret = process.env.AZURE_CLIENT_SECRET;
 
 const credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
 
-export function getGraphClient() {
+function getGraphClient() {
   return Client.initWithMiddleware({
     authProvider: {
       getAccessToken: async () => {
@@ -20,3 +20,5 @@ export function getGraphClient() {
     }
   });
 }
+
+module.exports = { getGraphClient };

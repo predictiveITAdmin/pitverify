@@ -1,12 +1,11 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import session from 'express-session';
-import errorHandler from './middleware/errorHandler.js';
-import authRoutes from './routes/authRoutes.js';
-import employeeRoutes from './routes/employeeRoutes.js';
-import statsRoutes from './routes/statsRoutes.js'
-
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const session = require('express-session');
+const errorHandler = require('./middleware/errorHandler');
+const authRoutes = require('./routes/authRoutes');
+const employeeRoutes = require('./routes/employeeRoutes');
+const statsRoutes = require('./routes/statsRoutes');
 
 dotenv.config();
 const app = express();
@@ -16,14 +15,16 @@ app.use(cors({
   origin: 'http://localhost:5173',
   credentials: true
 }));
+
 app.use(express.json());
+
 app.use(session({
   secret: 'secure-session',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false,       
-    sameSite: 'lax'       
+    secure: false,
+    sameSite: 'lax'
   }
 }));
 
@@ -31,7 +32,6 @@ app.use('/auth', authRoutes);
 app.use('/employees', employeeRoutes);
 app.use('/stats', statsRoutes);
 app.use(errorHandler);
-
 
 app.get('/health', (req, res) => {
   res.json({
@@ -42,14 +42,11 @@ app.get('/health', (req, res) => {
   });
 });
 
-
-
-// Start server
+// Start server (only when running locally, not in Azure)
 if (!process.env.AZURE_FUNCTIONS_ENVIRONMENT) {
   app.listen(port, () => {
     console.log(`Server running locally at http://localhost:${port}`);
   });
 }
 
-
-export default app;
+module.exports = app;
