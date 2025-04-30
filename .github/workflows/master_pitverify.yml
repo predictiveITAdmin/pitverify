@@ -32,7 +32,9 @@ jobs:
           npm run test --if-present
 
       - name: Zip artifact for deployment
-        run: zip -r release.zip api package.json package-lock.json
+        run: |
+          cd server
+          zip -r ../release.zip api package.json package-lock.json
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -50,8 +52,8 @@ jobs:
         with:
           name: node-app
 
-      # - name: Unzip artifact
-      #   run: unzip release.zip
+      - name: Unzip artifact
+        run: unzip release.zip
 
       - name: Deploy to Azure Functions
         uses: Azure/functions-action@v1
