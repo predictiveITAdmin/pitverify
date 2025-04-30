@@ -1,8 +1,7 @@
 {
-  "name": "qr_to_details",
+  "name": "server",
   "version": "1.0.0",
   "description": "Application can create a QR Code and fetch employee details",
-  "main": "index.js",
   "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
