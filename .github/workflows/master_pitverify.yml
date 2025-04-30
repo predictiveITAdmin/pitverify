@@ -31,8 +31,7 @@ jobs:
 
       - name: Archive Function App code
         run: |
-          cd server/api
-          zip -r ../../release.zip .
+          zip -r release.zip api package.json package-lock.json
 
       - name: Log in to Azure
         uses: azure/login@v1
