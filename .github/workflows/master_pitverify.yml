@@ -27,9 +27,11 @@ jobs:
 
       - name: Install dependencies
         run: |
+          pushd './server'
           npm install
           npm run build --if-present
           npm run test --if-present
+          popd
 
       - name: Zip artifact for deployment
         run: |
@@ -56,7 +58,8 @@ jobs:
         run: unzip release.zip
 
       - name: Deploy to Azure Functions
-        uses: Azure/functions-action@v1.4.6
+        uses: Azure/functions-action@v1
+        id: fa
         with:
           app-name: "pitverify"
           slot-name: "Production"
