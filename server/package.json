@@ -1,0 +1,29 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Application can create a QR Code and fetch employee details",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "dev": "nodemon \"./api/server.js\"",
+    "start": "func start",
+    "build": "echo \"No Build Required for API\" && exit 0"
+  },
+  "author": "Bhavesh",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/identity": "^4.9.1",
+    "@azure/msal-node": "^3.5.1",
+    "@microsoft/microsoft-graph-client": "^3.0.7",
+    "azure-function-express": "^1.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "isomorphic-fetch": "^3.0.0",
+    "passport": "^0.7.0",
+    "passport-azure-ad": "^4.3.5",
+    "react": "^19.1.0"
+  }
+}
