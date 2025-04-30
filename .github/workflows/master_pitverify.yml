@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: "." # Root of zip package
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: "./server" # Root of zip package
   NODE_VERSION: "20"
 
 jobs:
@@ -31,14 +31,8 @@ jobs:
           npm run build --if-present
           npm run test --if-present
 
-      - name: Prepare deployment artifact
-        run: |
-          mkdir _deploy
-          cp -r api/* _deploy/
-          cp package.json package-lock.json _deploy/
-          cd _deploy
-          zip -r ../release.zip .
-          cd ..
+      - name: Zip artifact for deployment
+        run: zip -r release.zip api package.json package-lock.json
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -64,5 +58,5 @@ jobs:
         with:
           app-name: "pitverify"
           slot-name: "Production"
-          package: release.zip
+          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_874631D6F5BF474BBD432731CA676568 }}
