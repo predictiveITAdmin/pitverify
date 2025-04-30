@@ -28,6 +28,10 @@ app.use(session({
   }
 }));
 
+console.log("CLIENT_ID:", process.env.CLIENT_ID);
+console.log("CLIENT_SECRET length:", process.env.CLIENT_SECRET?.length || 'MISSING');
+console.log("AUTHORITY:", process.env.AUTHORITY);
+
 app.use('/auth', authRoutes);
 app.use('/employees', employeeRoutes);
 app.use('/stats', statsRoutes);
