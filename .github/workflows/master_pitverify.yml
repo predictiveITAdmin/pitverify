@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: "./server" # Root of zip package
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: "."
   NODE_VERSION: "20"
 
 jobs:
@@ -60,5 +60,5 @@ jobs:
         with:
           app-name: "pitverify"
           slot-name: "Production"
-          package: release.zip
+          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_874631D6F5BF474BBD432731CA676568 }}
