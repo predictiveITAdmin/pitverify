@@ -27,7 +27,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pushd './server'
           npm install
           npm run build --if-present
           npm run test --if-present
@@ -35,8 +34,7 @@ jobs:
 
       - name: Zip artifact for deployment
         run: |
-          cd server
-          zip -r ../release.zip api package.json package-lock.json
+          zip -r release.zip api package.json package-lock.json
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
