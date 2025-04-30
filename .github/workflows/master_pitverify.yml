@@ -64,5 +64,5 @@ jobs:
         with:
           app-name: "pitverify"
           slot-name: "Production"
-          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          package: release.zip
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_874631D6F5BF474BBD432731CA676568 }}
