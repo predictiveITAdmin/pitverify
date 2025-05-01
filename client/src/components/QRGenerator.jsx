@@ -62,7 +62,7 @@ const QRGenerator = () => {
   };
 
   const copyLink = (empId) => {
-    const url = `http://localhost:5173/verify/${empId}`;
+    const url = `${import.meta.env.VITE_FRONTEND_URL}/verify/${empId}`;
     navigator.clipboard.writeText(url)
       .then(() => {
         setShowToast(true);

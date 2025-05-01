@@ -21,7 +21,9 @@ jobs:
           lfs: false
 
       - name: Set environment variable for Vite
-        run: echo "VITE_API_URL=https://pitverify.azurewebsites.net/api" >> $GITHUB_ENV
+        run: |
+          echo "VITE_API_URL=https://pitverify.azurewebsites.net/api" >> $GITHUB_ENV
+          echi "VITE_FRONTEND_URL=https://gentle-stone-089c4d30f.6.azurestaticapps.net" >> $GITHUB_ENV
 
       - name: Build And Deploy
         id: builddeploy
