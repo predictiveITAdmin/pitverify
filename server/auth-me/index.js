@@ -24,14 +24,20 @@ module.exports = async function (context, req) {
     const user = JSON.parse(decodeURIComponent(rawUser));
     context.res = {
       status: 200,
-      headers,
+      headers: {
+      ...corsHeaders,
+      "Content-Type": "application/json"
+      },
       body: { name: user.name }
     };
   } catch (err) {
     context.log.error('Error in /auth/me:', err);
     context.res = {
       status: 500,
-      headers,
+      headers: {
+      ...corsHeaders,
+      "Content-Type": "application/json"
+      },
       body: { error: 'Internal server error' }
     };
   }
