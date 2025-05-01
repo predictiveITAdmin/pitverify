@@ -4,7 +4,7 @@ const { getAllEmployeesBasic, getEmployeeData } = require('../services/graphServ
 
 const router = express.Router();
 
-router.get('/', isAuthenticated, async (req, res, next) => {
+router.get('/', isAuthenticated, async (req,res, next) => {
   try {
     const data = await getAllEmployeesBasic();
     res.json(data);
@@ -13,7 +13,7 @@ router.get('/', isAuthenticated, async (req, res, next) => {
   }
 });
 
-router.get('/public/:id', async (req, res) => {
+router.get('/public/:id', async (req,res) => {
   try {
     const id = req.params.id;
     const employee = await getEmployeeData(id);

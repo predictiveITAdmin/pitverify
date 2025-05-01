@@ -6,18 +6,21 @@ const errorHandler = require('./middleware/errorHandler');
 const authRoutes = require('./routes/authRoutes');
 const employeeRoutes = require('./routes/employeeRoutes');
 const statsRoutes = require('./routes/statsRoutes');
-
+ 
+ 
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 3001;
-
+ 
+ 
+ 
 app.use(cors({
   origin: 'http://localhost:5173',
   credentials: true
 }));
-
+ 
 app.use(express.json());
-
+ 
 app.use(session({
   secret: 'secure-session',
   resave: false,
@@ -27,14 +30,14 @@ app.use(session({
     sameSite: 'lax'
   }
 }));
-
-
+ 
+ 
 app.use('/auth', authRoutes);
 app.use('/employees', employeeRoutes);
 app.use('/stats', statsRoutes);
 app.use(errorHandler);
-
-app.get('/health', (req, res) => {
+ 
+app.get('/health', (req,res) => {
   res.json({
     status: 'OK',
     timestamp: new Date().toISOString(),
@@ -42,12 +45,12 @@ app.get('/health', (req, res) => {
     user: req.session.user?.name || null
   });
 });
-
+ 
 // Start server (only when running locally, not in Azure)
 if (!process.env.AZURE_FUNCTIONS_ENVIRONMENT) {
   app.listen(port, () => {
     console.log(`Server running locally at http://localhost:${port}`);
   });
 }
-
+ 
 module.exports = app;

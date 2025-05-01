@@ -33,7 +33,7 @@ jobs:
         run: |
           cd server
           npm install
-          zip -r ../release.zip api node_modules package.json package-lock.json
+          zip -r ../release.zip ./*
 
       - name: Log in to Azure
         uses: azure/login@v1

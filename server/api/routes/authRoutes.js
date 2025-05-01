@@ -17,7 +17,7 @@ function sha256(buffer) {
 }
 
 // Step 1: Login request (redirect to Azure)
-router.get('/login', (req, res) => {
+router.get('/login', (req,res) => {
   const codeVerifier = base64URLEncode(crypto.randomBytes(32));
   const codeChallenge = base64URLEncode(sha256(Buffer.from(codeVerifier)));
   req.session.codeVerifier = codeVerifier;
@@ -35,7 +35,7 @@ router.get('/login', (req, res) => {
 });
 
 // Step 2: Redirect handler (after login)
-router.get('/redirect', async (req, res) => {
+router.get('/redirect', async (req,res) => {
   const tokenRequest = {
     code: req.query.code,
     scopes: ["User.Read"],
@@ -54,7 +54,7 @@ router.get('/redirect', async (req, res) => {
 });
 
 // Step 3: Session check
-router.get('/me', (req, res) => {
+router.get('/me', (req,res) => {
   if (req.session.user) {
     res.json({ name: req.session.user.name });
   } else {
@@ -63,7 +63,7 @@ router.get('/me', (req, res) => {
 });
 
 // Step 4: Logout
-router.get('/logout', (req, res) => {
+router.get('/logout', (req,res) => {
   req.session.destroy(() => {
     res.redirect('https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=http://localhost:5173');
   });

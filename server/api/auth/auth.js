@@ -17,7 +17,7 @@ function sha256(buffer) {
 }
 
 // Step 1: Initiate Azure login
-router.get('/login', (req, res, next) => {
+router.get('/login', (req,res, next) => {
   const codeVerifier = base64URLEncode(crypto.randomBytes(32));
   const codeChallenge = base64URLEncode(sha256(Buffer.from(codeVerifier)));
 
@@ -47,7 +47,7 @@ router.get('/login', (req, res, next) => {
 });
 
 // Step 2: Handle redirect from Azure
-router.get('/redirect', async (req, res) => {
+router.get('/redirect', async (req,res) => {
   console.log('Received code:', req.query.code);
   console.log('Session codeVerifier exists:', !!req.session.codeVerifier);
   const code = req.query.code;
@@ -79,7 +79,7 @@ router.get('/redirect', async (req, res) => {
 });
 
 // Step 3: Check current session
-router.get('/me', (req, res) => {
+router.get('/me', (req,res) => {
   if (req.session.user) {
     res.json({ name: req.session.user.name });
   } else {
@@ -88,7 +88,7 @@ router.get('/me', (req, res) => {
 });
 
 // Step 4: Logout
-router.get('/logout', (req, res) => {
+router.get('/logout', (req,res) => {
   req.session.destroy(() => {
     res.redirect('https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=http://localhost:5173');
   });

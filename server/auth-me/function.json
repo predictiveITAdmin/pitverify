@@ -1,15 +1,12 @@
-
 {
-  "scriptFile": "index.js",
-  "entryPoint": "handler",
   "bindings": [
     {
       "authLevel": "anonymous",
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["get", "post", "put", "delete"],
-      "route": "api/{*segments}"
+      "route": "auth/me",
+      "methods": ["get"]
     },
     {
       "type": "http",

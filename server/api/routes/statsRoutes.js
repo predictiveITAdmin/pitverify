@@ -4,7 +4,7 @@ const isAuthenticated = require('../utils/isAuthenticated');
 
 const router = express.Router();
 
-router.get('/summary', isAuthenticated, async (req, res) => {
+router.get('/summary', isAuthenticated, async (req,res) => {
   try {
     const client = getGraphClient();
     const users = await client.api('/users').top(999).select('accountEnabled', 'id', 'givenName').get();
@@ -20,7 +20,7 @@ router.get('/summary', isAuthenticated, async (req, res) => {
 });
 
 // Department Breakdown Route
-router.get('/departments', isAuthenticated, async (req, res) => {
+router.get('/departments', isAuthenticated, async (req,res) => {
   try {
     const client = getGraphClient();
     const users = await client.api('/users').top(999).select('department').get();
@@ -39,7 +39,7 @@ router.get('/departments', isAuthenticated, async (req, res) => {
 });
 
 // New Hires This Month Route
-router.get('/new-hires', isAuthenticated, async (req, res) => {
+router.get('/new-hires', isAuthenticated, async (req,res) => {
   try {
     const client = getGraphClient();
     const today = new Date();
