@@ -190,7 +190,7 @@ const QRGenerator = () => {
                       ref={(el) => (qrRefs.current[emp.id] = el)}
                       className="bg-white p-4 border border-gray-300 rounded-xl shadow-sm"
                     >
-                      <QRCodeSVG value={`http://localhost:5173/verify/${emp.id}`} size={150} />
+                      <QRCodeSVG value={`${import.meta.env.VITE_FRONTEND_URL}/verify/${emp.id}`} size={150} />
                     </div>
                     <p className="text-sm text-gray-700 font-semibold text-center">{emp.displayName}</p>
                     <div className="flex gap-2">
