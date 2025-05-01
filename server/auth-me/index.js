@@ -1,10 +1,9 @@
 const { parse } = require('cookie');
+const { getCorsHeaders } = require('../api/utils/cors');
 
 module.exports = async function (context, req) {
-  const headers = {
-    'Access-Control-Allow-Origin': 'http://localhost:5173',
-    'Access-Control-Allow-Credentials': 'true'
-  };
+  const origin = req.headers.origin;
+  const corsHeaders = getCorsHeaders(origin);
 
   try {
     const cookies = parse(req.headers.cookie || '');
@@ -13,7 +12,10 @@ module.exports = async function (context, req) {
     if (!rawUser) {
       context.res = {
         status: 401,
-        headers,
+          headers: {
+      ...corsHeaders,
+      "Content-Type": "application/json"
+      },
         body: { error: 'Not authenticated' }
       };
       return;
