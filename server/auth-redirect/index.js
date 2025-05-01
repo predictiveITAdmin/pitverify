@@ -27,7 +27,7 @@ module.exports = async function (context, req) {
 
     // Mimic session: return a Set-Cookie header with user info
     const userData = JSON.stringify(tokenResponse.account);
-    const cookie = `user=${encodeURIComponent(userData)}; Path=/; HttpOnly; SameSite=Lax`;
+    const cookie = `user=${encodeURIComponent(userData)}; Path=/; HttpOnly; SameSite=None; Secure`;
 
     context.res = {
       status: 302,
