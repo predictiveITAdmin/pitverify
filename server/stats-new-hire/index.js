@@ -1,11 +1,11 @@
 const { parse } = require('cookie');
 const { getGraphClient } = require('../api/services/masl');
+const { getCorsHeaders } = require('../api/utils/cors');
 
 module.exports = async function (context, req) {
-   const headers = {
-    'Access-Control-Allow-Origin': 'http://localhost:5173',
-    'Access-Control-Allow-Credentials': 'true'
-  };
+  const origin = req.headers.origin;
+  const corsHeaders = getCorsHeaders(origin);
+
   try {
     const cookies = parse(req.headers.cookie || '');
     const user = cookies.user ? JSON.parse(decodeURIComponent(cookies.user)) : null;
@@ -30,7 +30,10 @@ module.exports = async function (context, req) {
 
     context.res = {
       status: 200,
-      headers,
+      headers: {
+      ...corsHeaders,
+      "Content-Type": "application/json"
+      },
       body: users.value
     };
   } catch (err) {
