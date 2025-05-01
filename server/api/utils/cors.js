@@ -1,7 +1,8 @@
 // utils/cors.js
 const allowedOrigins = [
   "https://gentle-stone-089c4d30f.6.azurestaticapps.net",
-  "http://localhost:5173"
+  "http://localhost:5173",
+  "https://verifyme.predictiveit.com"
 ];
 
 function getCorsHeaders(origin) {
