@@ -3,7 +3,7 @@ const { getGraphClient } = require('./masl');
 async function getAllEmployeesBasic() {
   const client = getGraphClient();
   const response = await client.api('/users')
-    .select('displayName,employeeId,id, accountEnabled, department')
+    .select('displayName,employeeId,id,accountEnabled,department,jobTitle,givenName,surname,mail,userPrincipalName')
     .top(999)
     .get();
   return response.value;

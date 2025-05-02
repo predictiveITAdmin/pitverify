@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { FaSort, FaSortUp, FaSortDown, FaSearch, FaFilter } from 'react-icons/fa';
+import { exportToCSV } from '../utils/exportToCSV';
 
 const EmployeeDirectory = () => {
   const [employees, setEmployees] = useState([]);
@@ -95,6 +96,20 @@ const EmployeeDirectory = () => {
     });
   };
 
+  const handleCSVExport = () => {
+    const csvData = filtered.map(emp => ({
+      'ID': emp.employeeId || emp.id || '',
+      'Last Name': emp.surname || emp.displayName?.split(' ')[1] || '',
+      'First Name': emp.givenName || emp.displayName?.split(' ')[0] || '',
+      'Staff ID': emp.employeeId || '',
+      'Department': emp.department || '',
+      'Job Title': emp.jobTitle || ''
+    }));
+    exportToCSV({
+      data: csvData, fileName:'employees', headers:['ID', 'Last Name', 'First Name', 'Department', 'Job Title', 'Staff ID']
+    });
+  };
+
   const getSortIcon = (key) => {
     if (sortConfig.key !== key) return <FaSort className="inline ml-1 text-gray-400" />;
     return sortConfig.direction === 'asc' ? (
@@ -115,7 +130,7 @@ const EmployeeDirectory = () => {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-gray-800">All Users</h1>
-
+      { console.log(filtered)}
       {/* Filters + Search */}
       <div className="bg-white p-6 rounded-lg shadow-md space-y-4 sm:space-y-0 sm:flex sm:items-center sm:justify-between">
         {/* Search Input */}
@@ -137,6 +152,7 @@ const EmployeeDirectory = () => {
 
         {/* Filters */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 flex-1 justify-end">
+          
           <div className="relative">
             <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
               <FaFilter className="w-4 h-4" />
@@ -175,6 +191,16 @@ const EmployeeDirectory = () => {
         </div>
       )}
 
+      {/* Export Button */}
+            <span className="flex items-center justify-end pl-3 w-full  text-gray-400">
+              <button
+                onClick={handleCSVExport}
+                className="px-4 py-2 bg-indigo-600 w-fit cursor-pointer text-white rounded hover:bg-indigo-700"
+              >
+                Export TO CSV
+              </button>
+            </span>
+
       {/* Table */}
       <div className="overflow-x-auto bg-white rounded-lg shadow">
         <table className="min-w-full divide-y divide-gray-200">
@@ -196,7 +222,7 @@ const EmployeeDirectory = () => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {paginatedUsers.map(emp => (
-              <tr key={emp.id} onClick={() => handleUserClick(emp.id)}>
+              <tr key={emp.id} onClick={() => handleUserClick(emp.id)} className='cursor-pointer'>
                 <td className="px-6 py-4 text-sm text-gray-900">{emp.displayName || 'Unnamed'}</td>
                 <td className="px-6 py-4 text-sm text-gray-500">{emp.id || '—'}</td>
                 <td className="px-6 py-4 text-sm text-gray-500">{emp.department || 'Unknown'}</td>
