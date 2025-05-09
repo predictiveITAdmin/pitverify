@@ -22,7 +22,7 @@ const EmployeeDirectory = () => {
     const fetchEmployees = async () => {
       try {
         const res = await axios.get(`${import.meta.env.VITE_API_URL}/employees`, {
-          withCredentials: true
+           withCredentials: true
         });
         setEmployees(res.data);
         setFiltered(res.data);

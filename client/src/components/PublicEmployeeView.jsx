@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FaCheckCircle } from 'react-icons/fa';
+import { MdCheckCircle, MdCancel } from 'react-icons/md';
+
 
 const PublicEmployeeView = () => {
   const { id } = useParams();
@@ -43,7 +45,26 @@ const PublicEmployeeView = () => {
 
   return (
     <div className="min-h-full flex flex-col items-center justify-center bg-gradient-to-br">
-      <div className="max-w-4xl bg-white p-8 rounded-2xl shadow-2xl space-y-8">
+      <div className="max-w-4xl bg-white rounded-2xl shadow-2xl space-y-8">
+            <div
+      className={`flex flex-col items-center justify-center py-4 shadow-md w-full mx-auto 
+        ${employee.accountEnabled ? 'bg-green-600' : 'bg-red-600'}`}
+    >
+      <div className="flex items-center gap-3 text-white text-xl font-semibold">
+        {employee.accountEnabled ? (
+          <>
+            <MdCheckCircle className="text-3xl" />
+            Account Active
+          </>
+        ) : (
+          <>
+            <MdCancel className="text-3xl" />
+            Account Inactive
+          </>
+        )}
+      </div>
+    </div>
+    <div className="max-w-4xl bg-white p-6 rounded-2xl shadow-2xl space-y-8">
         {/* Header */}
         <div className="text-right">
           <h1 className="text-l text-gray-500 mt-1">{employee.companyName || 'PredictiveIT'}</h1>
@@ -83,6 +104,7 @@ const PublicEmployeeView = () => {
           <p className="text-xs text-gray-400">
             Employee Verification Portal • {new Date().getFullYear()}
           </p>
+        </div>
         </div>
       </div>
     </div>
