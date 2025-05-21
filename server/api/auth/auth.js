@@ -31,7 +31,7 @@ router.get('/login', (req,res, next) => {
 
     try {
       const authCodeUrlParameters = {
-        scopes: ["openid", "profile", "User.Read"],
+        scopes: ["openid", "profile", "User.ReadWrite"],
         redirectUri: REDIRECT_URI,
         codeChallenge,
         codeChallengeMethod: 'S256'
