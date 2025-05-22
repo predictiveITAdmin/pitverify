@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { MdCheckCircle, MdCancel } from 'react-icons/md';
-
+import ProfilePhotoUploader from '../helper/ProfilePhotoUploader';
 
 const PublicEmployeeView = () => {
   const { id } = useParams();
@@ -21,9 +21,7 @@ const PublicEmployeeView = () => {
       setEmployee(employeeRes.data);
 
       // Attempt to get image SAS URL
-      const imageRes = await axios.get(`${import.meta.env.VITE_API_URL}/profile-picture/${id}`, {
-           withCredentials: true
-        });
+      const imageRes = await axios.get(`${import.meta.env.VITE_API_URL}/profile-picture/${id}`);
       const { url } = imageRes.data;
 
       // Attempt to fetch the actual image blob
@@ -125,10 +123,11 @@ const PublicEmployeeView = () => {
                     className="relative transform transition-all duration-300 ease-out scale-100 opacity-100 animate-zoomIn"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <img
-                      src={imgUrl}
-                      alt="Full Size"
-                      className="max-w-[90vw] max-h-[90vh] rounded-lg shadow-lg"
+                    <ProfilePhotoUploader
+                      userId={id}
+                      currentImage={imgUrl}
+                      onUploadSuccess={(newBlobUrl) => setImgUrl(newBlobUrl)}
+                      className="w-52 h-52 md:w-52 md:h-52 rounded-full border border-gray-300 object-cover cursor-pointer"
                     />
                     <button
                       onClick={() => setIsModalOpen(false)}
