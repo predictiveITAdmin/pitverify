@@ -1,12 +1,13 @@
 {
   "bindings": [
     {
-      "authLevel": "function",
+      "authLevel": "anonymous",
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["post"],
-      "route": "profile-picture/upload"
+      "methods": ["post", "options"],
+      "route": "profile-picture/upload",
+      "dataType": "binary"
     },
     {
       "type": "http",
