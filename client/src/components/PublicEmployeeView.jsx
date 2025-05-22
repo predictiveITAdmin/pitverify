@@ -21,7 +21,9 @@ const PublicEmployeeView = () => {
       setEmployee(employeeRes.data);
 
       // Attempt to get image SAS URL
-      const imageRes = await axios.get(`${import.meta.env.VITE_API_URL}/profile-picture/${id}`);
+      const imageRes = await axios.get(`${import.meta.env.VITE_API_URL}/profile-picture/${id}`, {
+           withCredentials: true
+        });
       const { url } = imageRes.data;
 
       // Attempt to fetch the actual image blob
