@@ -1,6 +1,6 @@
 const { BlobServiceClient, StorageSharedKeyCredential, generateBlobSASQueryParameters, BlobSASPermissions } = require('@azure/storage-blob');
 const { getCorsHeaders } = require('../api/utils/cors');
-
+const { parse } = require('cookie');
 const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const accountKey = process.env.AZURE_STORAGE_ACCOUNT_KEY;
 const containerName = 'pit-verify';
@@ -9,6 +9,17 @@ module.exports = async function (context, req) {
   const origin = req.headers.origin;
   const corsHeaders = getCorsHeaders(origin);
   const userId = req.params.userId;
+
+  const cookies = parse(req.headers.cookie || '');
+  const user = cookies.user ? JSON.parse(decodeURIComponent(cookies.user)) : null;
+
+    if (!user) {
+      context.res = {
+        status: 401,
+        body: { error: 'Unauthorized' }
+      };
+      return;
+    }
 
   if (!userId) {
     context.res = {
