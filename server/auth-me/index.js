@@ -22,13 +22,18 @@ module.exports = async function (context, req) {
     }
 
     const user = JSON.parse(decodeURIComponent(rawUser));
+    context.log(user)
     context.res = {
       status: 200,
       headers: {
       ...corsHeaders,
       "Content-Type": "application/json"
       },
-      body: { name: user.name }
+      body: {
+        id: user.localAccountId,                   
+        name: user.name,
+        email: user.username
+      }
     };
   } catch (err) {
     context.log.error('Error in /auth/me:', err);

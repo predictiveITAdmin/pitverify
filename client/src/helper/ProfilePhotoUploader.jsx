@@ -1,110 +1,48 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { FiEdit, FiUpload } from 'react-icons/fi';
+import useAuthStore from '../store/authStore';
+import ProfilePhotoUploadModal from './ProfilePhotoUploadModal';
 
-const ProfilePhotoUploader = ({ userId, currentImage, onUploadSuccess }) => {
+const ProfilePhotoUploader = ({ userId, currentImage, onUploadSuccess, employee }) => {
+  const { user } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [error, setError] = useState('');
+  const [allowPhotoEdit, setAllowPhotoEdit] = useState(false);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0] || null;
-    setSelectedFile(file);
-    setError('');
-
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setPreviewUrl(reader.result);
-      reader.readAsDataURL(file);
+  useEffect(() => {
+    if (user?.id && userId) {
+      setAllowPhotoEdit(user.id === userId);
     }
-  };
-
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      setError('Please select an image.');
-      return;
-    }
-    console.log(selectedFile);
-    try {
-      setIsUploading(true);
-      const blob = await selectedFile.arrayBuffer();
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/profile-picture/upload?userId=${userId}`,
-        blob,
-        {
-          headers: {
-            'Content-Type': selectedFile.type
-          },
-          responseType: 'text',
-        }
-      );
-
-      console.log(`res: ${res}`)
-      console.log(`Blob: ${blob}`)
-      const blobUrl = URL.createObjectURL(new Blob([blob], { type: selectedFile.type }));
-      onUploadSuccess(blobUrl);
-      console.log(`Blob URL : ${blobUrl}`)
-      setIsModalOpen(false);
-      setSelectedFile(null);
-      setPreviewUrl(null);
-    } catch (err) {
-      console.error('Upload failed:', err);
-      setError('Upload failed. Please try again.');
-    } finally {
-      setIsUploading(false);
-    }
-  };
+  }, [user, userId]);
 
   return (
     <>
-      <img
-        src={currentImage}
-        alt="Profile"
-        className="w-96 h-96 md:w-96 md:h-96 rounded-full border border-gray-300 object-cover cursor-pointer"
-        onClick={() => setIsModalOpen(true)}
-      />
-
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
-          onClick={() => setIsModalOpen(false)}
-        >
-          <div
-            className="bg-white p-6 rounded-xl shadow-xl w-[90%] max-w-md"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="text-lg font-bold mb-4">Update Profile Picture</h2>
-
-            <input type="file" accept="image/*" onChange={handleFileChange} className="mb-3" />
-
-            {previewUrl && (
-              <img
-                src={previewUrl}
-                alt="Preview"
-                className="w-52 h-52 rounded-full object-cover mx-auto mb-4"
-              />
+      <div className="relative w-full h-full md:w-96 md:h-96">
+            <img
+              src={currentImage}
+              alt="Profile"
+              className="w-full h-full rounded-2xl border border-gray-300 object-cover"
+            />
+            {allowPhotoEdit && (
+              <div
+                className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 
+                  bg-gray-600 text-white p-2 rounded-full shadow-2xl hover:bg-gray-200 hover:text-gray-900 
+                  transform hover:scale-105 transition-all ease-in duration-200 cursor-pointer flex items-center justify-center"
+                onClick={() => setIsModalOpen(true)}
+                title="Edit Profile Picture"
+              >
+                <FiEdit className="w-5 h-5 mr-1" />
+                <span className="text-sm">Edit Photo</span>
+              </div>
             )}
 
-            {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+      </div>
 
-            <div className="flex justify-end space-x-3">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleUpload}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-                disabled={isUploading}
-              >
-                {isUploading ? 'Uploading...' : 'Upload'}
-              </button>
-            </div>
-          </div>
-        </div>
+      {isModalOpen && (
+        <ProfilePhotoUploadModal
+          userId={userId}
+          onClose={() => setIsModalOpen(false)}
+          onUploadSuccess={onUploadSuccess}
+        />
       )}
     </>
   );

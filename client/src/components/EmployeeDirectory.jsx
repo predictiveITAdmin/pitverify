@@ -98,7 +98,7 @@ const EmployeeDirectory = () => {
 
   const handleCSVExport = () => {
     const csvData = filtered.map(emp => ({
-      'ID': emp.employeeId || emp.id || '',
+      'ID': emp.id || '',
       'Last Name': emp.surname || emp.displayName?.split(' ')[1] || '',
       'First Name': emp.givenName || emp.displayName?.split(' ')[0] || '',
       'Staff ID': emp.employeeId || '',

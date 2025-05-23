@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { MdCheckCircle, MdCancel } from 'react-icons/md';
+import { MdCheckCircle, MdCancel, MdSettingsBackupRestore } from 'react-icons/md';
 import ProfilePhotoUploader from '../helper/ProfilePhotoUploader';
+import { FiUpload } from 'react-icons/fi';
+import ProfilePhotoUploadModal from '../helper/ProfilePhotoUploadModal';
+import useAuthStore from '../store/authStore';
 
 const PublicEmployeeView = () => {
   const { id } = useParams();
@@ -12,6 +15,19 @@ const PublicEmployeeView = () => {
   const [imgUrl, setImgUrl] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imageNotFound, setImageNotFound] = useState(false);
+  const { user } = useAuthStore();
+  const [allowPhotoEdit, setAllowPhotoEdit] = useState(false);
+  const refresh = () => {
+    window.location.reload();
+  };
+
+useEffect(() => {
+  if (user?.id && id) {
+    setAllowPhotoEdit(user.id === id);
+  } else {
+    setAllowPhotoEdit(false);
+  }
+}, [user?.id, id]);
 
   useEffect(() => {
   const loadData = async () => {
@@ -96,6 +112,8 @@ const PublicEmployeeView = () => {
         {/* Profile Picture or Initials */}
         <div className="flex-shrink-1">
           {imageNotFound ? (
+            <>
+            <div className='relative'>
             <div className="w-20 h-20 md:w-28 md:h-28 flex items-center justify-center tracking-[0.06em] bg-blue-700 text-gray-100 rounded-full text-4xl font-semibold">
               {employee?.displayName
                 ?.split(" ")
@@ -104,6 +122,46 @@ const PublicEmployeeView = () => {
                 .slice(0, 2)
                 .toUpperCase()}
             </div>
+            {allowPhotoEdit && ( 
+             <div
+                className="absolute bottom-0 right-0 
+                bg-gray-600 text-white rounded-full shadow-2xl p-2  hover:bg-gray-200 hover:text-gray-900 
+                transform hover:scale-105 transition-all ease-in duration-200 cursor-pointer flex items-center justify-center"
+                onClick={() => setIsModalOpen(true)}
+                title="Add Profile Picture"
+              >
+                <FiUpload className="w-5 h-5 " />
+              </div>
+                )}
+              {isModalOpen && (
+                <div
+                  className="fixed inset-0 z-50 flex items-center justify-center transition-all duration-300 ease-outjustify-center bg-gray-950/75 bg-opacity-60"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                   {imageNotFound && (
+                  <div
+                    className="relative transform w-96 h-96 transition-all duration-300 ease-out scale-100 opacity-100 animate-zoomIn"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <ProfilePhotoUploadModal
+                          userId={id}
+                          onClose={() => setIsModalOpen(false)}
+                          onUploadSuccess={(newBlobUrl) => {
+                            setImgUrl(`${newBlobUrl}?t=${Date.now()}`);
+                            refresh();
+                          }}/>
+                    <button
+                      onClick={() => setIsModalOpen(false)}
+                      className="absolute top-2 right-2 cursor-pointer bg-white rounded-full p-1 text-gray-800 hover:bg-gray-200"
+                    >
+                      ❌
+                    </button>
+                  </div>  
+                  )}
+                </div>
+                )}
+              </div>
+              </>
           ) : (
              <>
               <img
@@ -119,15 +177,17 @@ const PublicEmployeeView = () => {
                   className="fixed inset-0 z-50 flex items-center justify-center transition-all duration-300 ease-outjustify-center bg-gray-950/75 bg-opacity-60"
                   onClick={() => setIsModalOpen(false)}
                 >
+                  {!imageNotFound && (
                   <div
                     className="relative transform transition-all duration-300 ease-out scale-100 opacity-100 animate-zoomIn"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <ProfilePhotoUploader
+                     <ProfilePhotoUploader
                       userId={id}
                       currentImage={imgUrl}
+                      imageNotFound={imageNotFound}
                       onUploadSuccess={(newBlobUrl) => setImgUrl(newBlobUrl)}
-                      className="w-52 h-52 md:w-52 md:h-52 rounded-full border border-gray-300 object-cover cursor-pointer"
+                      className="w-52 h-52 md:w-52 md:h-52 border border-gray-300 object-cover cursor-pointer"
                     />
                     <button
                       onClick={() => setIsModalOpen(false)}
@@ -135,7 +195,9 @@ const PublicEmployeeView = () => {
                     >
                       ❌
                     </button>
-                  </div>
+                  </div>  
+                  )}
+                  
                 </div>
               )}
             </>
